@@ -129,6 +129,6 @@ export async function planPhotos(entries, { useModified = false, progress = () =
   return { rows, ignored: entries.length - selected.length };
 }
 
-export function shouldCopy(row, includeDuplicates) {
+export function shouldCopy(row, includeDuplicates = false) {
   return !row.duplicateOf || includeDuplicates;
 }
