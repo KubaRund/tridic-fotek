@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eff0e9">
+  <meta name="description" content="Roztřiď si fotky do složek podle data pořízení a najdi shodné kopie přímo v prohlížeči.">
+  <title>Třídič fotek</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="top shell">
+    <a class="brand" href="./"><span class="logo" aria-hidden="true"><i></i></span>Třídič fotek</a>
+    <a class="nav-link" href="#jak-to-funguje">Jak to funguje</a>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="intro-title">
+      <h1 id="intro-title">Uděláme ve fotkách pořádek.</h1>
+      <p>Vyber složku, zkontroluj navržené rozdělení a ulož roztříděné kopie podle roku a měsíce.</p>
+    </section>
+
+    <noscript><p class="message error">Pro třídění zapni v prohlížeči JavaScript.</p></noscript>
+    <div class="workspace">
+      <aside class="sidebar" aria-label="Nastavení třídění">
+        <section class="panel source-panel">
+          <h2>Zdrojové fotky</h2>
+          <p class="source-name" id="source-name">Načítám ukázku…</p>
+          <button type="button" id="folder-button" class="button primary">Vybrat složku</button>
+          <input id="folder-input" type="file" webkitdirectory multiple hidden>
+          <button type="button" id="demo-button" class="button outline">Otevřít ukázku</button>
+          <p class="local-note">Fotky se zpracují ve tvém zařízení.</p>
+        </section>
+
+        <section class="panel options-panel">
+          <h2>Pravidla třídění</h2>
+          <label class="option"><input id="use-modified" type="checkbox"><span>U fotek bez data použít čas změny souboru</span></label>
+          <label class="option"><input id="include-duplicates" type="checkbox"><span>Kopírovat i shodné soubory</span></label>
+          <p class="subtle">Shoda se ověřuje podle obsahu souboru.</p>
+        </section>
+
+        <section class="panel actions-panel">
+          <h2>Výstup</h2>
+          <button type="button" id="copy-button" class="button primary" disabled>Vytvořit roztříděné kopie</button>
+          <button type="button" id="csv-button" class="button outline" disabled>Stáhnout plán CSV</button>
+          <p class="subtle" id="copy-note">Kopie vzniknou v nové složce na místě, které vybereš.</p>
+        </section>
+      </aside>
+
+      <section class="panel preview" aria-labelledby="preview-title">
+        <div class="preview-heading">
+          <h2 id="preview-title">Náhled třídění</h2>
+          <p class="subtle" id="preview-note">Složky ve výstupu mají tvar rok/měsíc.</p>
+        </div>
+        <dl class="stats">
+          <div><dt>Načtené fotky</dt><dd id="photo-count">—</dd></div>
+          <div><dt>Ke zkopírování</dt><dd id="copy-count">—</dd></div>
+          <div><dt>Shodné soubory</dt><dd id="duplicate-count">—</dd></div>
+          <div><dt>Bez data</dt><dd id="undated-count">—</dd></div>
+        </dl>
+
+        <progress id="progress" aria-label="Průběh třídění" hidden></progress>
+        <p id="message" class="message" role="status" hidden></p>
+        <ul id="failures" class="failures" hidden></ul>
+
+        <div class="filters">
+          <label class="search"><span>Hledat fotku</span><input id="search" type="search" placeholder="Název nebo složka"></label>
+          <label><span>Zobrazit</span><select id="filter">
+            <option value="all">Všechny fotky</option><option value="dated">S datem</option>
+            <option value="undated">Bez data</option><option value="duplicate">Shodné kopie</option>
+            <option value="renamed">Upravené názvy</option>
+          </select></label>
+        </div>
+
+        <div class="list-labels" aria-hidden="true"><span>Zdroj</span><span>Cíl</span></div>
+        <ul id="results" class="results" aria-label="Navržené umístění fotek"></ul>
+        <p id="empty" class="empty" hidden></p>
+        <div id="paging" class="paging" hidden>
+          <button type="button" id="previous" class="button outline">Předchozí</button>
+          <span id="page-count"></span>
+          <button type="button" id="next" class="button outline">Další</button>
+        </div>
+      </section>
+    </div>
+
+    <details id="jak-to-funguje" class="panel help">
+      <summary>Jak to funguje</summary>
+      <ol>
+        <li>Třídič hledá datum pořízení v metadatech EXIF. Když chybí, zkusí datum ve jménu souboru, například <code>IMG_20250202_114315.jpg</code>.</li>
+        <li>Fotky bez rozpoznatelného data mají vlastní složku. Čas změny souboru si můžeš zapnout v nastavení.</li>
+        <li>Pokud mají dvě různé fotky mířit do stejné složky pod stejným jménem, výstup dostane číselnou příponu. Originály zůstanou na místě.</li>
+      </ol>
+    </details>
+  </main>
+</body>
+</html>
